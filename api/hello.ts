@@ -1,12 +1,11 @@
 console.log("endpoint is working");
-
-import { VercelRequest, VercelResponse } from "@vercel/node";
-import mongoose from "mongoose";
-
 // MongoDB connection URI
 const uri = process.env.MONGODB_URI as string;
 
 console.log(uri);
+
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import mongoose from "mongoose";
 
 // Mongoose model
 const DataModel = mongoose.model(
