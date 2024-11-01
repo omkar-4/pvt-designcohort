@@ -1,5 +1,47 @@
 console.log("endpoint is working");
 
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import mongoose from "mongoose";
+
+// MongoDB connection URI
+const uri = process.env.MONGODB_URI as string;
+
+console.log(uri);
+
+// Mongoose model
+const DataModel = mongoose.model(
+  "Data",
+  new mongoose.Schema({
+    name: { type: String, required: true },
+    value: { type: Number, required: true },
+  })
+);
+
+// Connect to the database
+async function connectToDatabase() {
+  if (mongoose.connection.readyState === 0) {
+    if (!uri) {
+      console.log("MongoDB URI is not defined");
+
+      throw new Error("MongoDB URI is not defined");
+    }
+    await mongoose.connect(uri);
+  }
+}
+
+// API handler
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  try {
+    await connectToDatabase();
+
+    const data = await DataModel.find({});
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error in API handler:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 // import { VercelRequest, VercelResponse } from "@vercel/node";
 // import mongoose, { Document } from "mongoose";
 
