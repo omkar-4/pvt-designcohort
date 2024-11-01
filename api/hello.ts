@@ -32,7 +32,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await connectToDatabase();
 
-    const data = await DataModel.find({});
+    const data = await DataModel.find({}).catch((err) => {
+      console.error("Error fetching data:", err);
+      throw new Error("Error fetching data");
+    });
+
     res.status(200).json(data);
   } catch (error) {
     console.error("Error in API handler:", error); // Log the error for debugging
