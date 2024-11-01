@@ -4,14 +4,17 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   const method = req.method;
-
-  if (method === "GET") {
-    res.status(200).json({ message: "Hello, this is a GET request!" });
-  } else if (method === "POST") {
-    const requestBody = req.body;
-    res.status(200).json({ message: "Data received", data: requestBody });
-  } else {
-    res.status(405).json({ message: "Method Not Allowed" });
+  try {
+    if (method === "GET") {
+      res.status(200).json({ message: "Hello, this is a GET request!" });
+    } else if (method === "POST") {
+      const requestBody = req.body;
+      res.status(200).json({ message: "Data received", data: requestBody });
+    } else {
+      res.status(405).json({ message: "Method Not Allowed" });
+    }
+  } catch (err) {
+    console.error("Error in API handler:", err); // Log the error for debugging
   }
 };
 
