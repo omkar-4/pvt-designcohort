@@ -16,7 +16,7 @@ const dataSchema = new mongoose.Schema<IData>({
 const DataModel = mongoose.model<IData>("Data", dataSchema);
 
 // MongoDB connection URI
-const uri = process.env.MONGODB_URI as string;
+const uri = process.env.MONGODB_URI;
 
 // A singleton for MongoDB connection
 async function connectToDatabase() {
@@ -35,7 +35,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const data = await DataModel.find({});
     res.status(200).json(data);
   } catch (error) {
-    console.error(error); // Log the error for debugging
-    res.status(500).json({ message: "Error fetching data", error });
+    console.error("Error in API handler:", error); // Log the error for debugging
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 }
